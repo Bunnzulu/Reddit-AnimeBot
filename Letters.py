@@ -9,8 +9,8 @@ def CountLetters(text:str):
     while Most_used_letter[n-1][0] not in Letters.split(","):
         n += 1
         Most_used_letter = Result.most_common(n)
-    Most_used_letters = f"The most used letter is {Most_used_letter[n-1][0]}. It appears {Most_used_letter[n-1][1]} times"
-    All_Letters = f"The letters used are {list(filter(lambda x:x in Letters.split(","),set(Result.elements())))}."
+    Most_used_letters = f"Most used letter is {Most_used_letter[n-1][0]}.\n It appears {Most_used_letter[n-1][1]} times"
+    All_Letters = f"Letters used are {list(filter(lambda x:x in Letters.split(","),set(Result.elements())))}."
     return Most_used_letters,All_Letters
 
 
