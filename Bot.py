@@ -1,42 +1,31 @@
 import praw
 from dotenv import load_dotenv
 import os
-from collections import Counter
+from Letters import CountLetters
 load_dotenv("py.env")
 
-Letters = "q,w,e,r,t,y,u,i,o,p,l,k,j,h,g,f,d,s,a,x,c,v,b,n,m"
-
-
+# Reddit API credentials
 reddit_instance = praw.Reddit(
     client_id= os.getenv("CLIENT_ID"),
     client_secret = os.getenv("CLIENT_SECRET"),
     username = os.getenv("UNAME"),
     password = os.getenv("PASSWORD"),
     user_agent= os.getenv("USER_AGENT")
-    )
+)
 
+# Define the subreddit to monitor
+subreddit = reddit_instance.subreddit('testingground4bots')
 
+# Define a command trigger
+TRIGGER = "!testscript"
 
-def CountLetters(text:str):
-    n = 1
-    Result = Counter(text)
-    Most_used_letter = Result.most_common(n)
-    while Most_used_letter[n-1][0] not in Letters.split(","):
-        n += 1
-        Most_used_letter = Result.most_common(n)
-    Most_used_letters = f"The most used letter is {Most_used_letter[n-1][0]}. It appears {Most_used_letter[n-1][1]} times"
-    All_Letters = f"The letters used are {list(filter(lambda x:x in Letters.split(","),set(Result.elements())))}."
-    print(Most_used_letters)
-    print(All_Letters)
+# Function to execute the script
 
-
-subreddit = reddit_instance.subreddit("learnprogramming")
-
-top_25_submissions = subreddit.new(limit=25)
-
-for sub in top_25_submissions:
-    print(sub.title)
-    CountLetters(sub.selftext)
-    print("--------------")
-
-
+# Monitor comments in the subreddit
+for comment in subreddit.stream.comments(skip_existing=True):
+    if TRIGGER in comment.body:
+        # Run the Python script
+        script_output = CountLetters(comment.body)
+        
+        # Reply to the comment with the script output
+        comment.reply(f"This Comment's Stats:\n{script_output[0]}.\n{script_output[1]}")
