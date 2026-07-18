@@ -46,5 +46,5 @@ for comment in subreddit.stream.comments(skip_existing=True):
                 List_of_Comments.append(c.body)
             script_output = CountLetters("".join(List_of_Comments))  
             comment.reply(f"This Post's combined Stats:\n{script_output[0]}.\n{script_output[1]}")
-    except:pass
+    except Exception:pass
 
